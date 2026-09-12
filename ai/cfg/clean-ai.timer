@@ -1,0 +1,14 @@
+# clean-ai.timer--Tells systemd when to run unit service. It lives with all the other units and timers at:
+#    /etc/systemd/system/clean-ai.timer
+#
+[Unit]
+Description=Run system maintenance for AI cleanup weekly
+
+[Timer]
+# Runs every Monday at 2:00 AM
+OnCalendar=Mon *-*-* 02:00:00
+# if system is powered off at scheduled runtime, launch immediately on next boot:
+Persistent=true
+
+[Install]
+WantedBy=timers.target
