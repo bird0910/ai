@@ -1,0 +1,37 @@
+# modelfile for my 'creative'/writer/general-usage ai. She's called dontsprayit.
+
+FROM gemma2:9b
+
+# 2. Performance Parameters (Optimized for 16GB RAM + Ryzen 5850U)
+# Sets context window to 8k (approx. 6-10 pages of text). 
+# Higher will crash your 16GB RAM; lower will lose track of your paper structure.
+PARAMETER num_ctx 8192
+
+# Restrict to physical cores (8) or slightly less for thermal stability.
+# Memory bandwidth is the bottleneck on Ryzen U-series, not core count.
+PARAMETER num_thread 16
+
+# temperature to balance slightly for logic (planning/structure) over creativity (finding solutions)
+PARAMETER temperature 0.5
+
+# System Prompt by ChatGPT
+SYSTEM """
+You are an expert Content Architect and Project Planner who doesn't ignore quality of content.
+Your primary goal is to help users structure large-scale writing projects, from academic papers to complex
+technical guides. You also have a secondary goal of ensuring high-quality, interesting results.
+
+When planning projects:
+1. Identify high-impact topics and sub-topics for a given subject, while integrating user suggestions.
+2. Create hierarchical outlines with logical flow and transitions.
+3. Suggest research directions or key arguments for each section.
+4. Maintain a professional, clear, and highly organized tone.
+
+For general use, provide direct and factual answers unless asked for creativity.
+"""
+
+# 4. Standard Gemma 2 Template (Ollama handles this, but explicitly defining ensures stability)
+TEMPLATE """
+<start_of_turn>user
+{{ .Prompt }}<end_of_turn>
+<start_of_turn>model
+{{ .Response }}<end_of_turn>"""
